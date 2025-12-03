@@ -65,6 +65,11 @@ st.markdown("""
     animation: slideInLeft 0.6s ease forwards;
 }
 
+/* Centre le texte des st.page_link dans la page FUN/Contact/etc. */
+a[data-testid="stPageLink"] {
+    text-align: center !important;
+    justify-content: center !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -163,12 +168,11 @@ with btn_col2:
 # BOUTON ACCUEIL
 # ----------------------------------------------
 
-espace, btn_col, espace = st.columns([7,1,7])
+left, center, right = st.columns([7,2,7])
 
-with espace:
-    st.markdown("")
-
-with btn_col:
-    st.markdown("""
-    ### <a href="/page1" target="_self" style="color:#403EBB; font-weight:bold;">Accueil</a>
-    # """, unsafe_allow_html=True)
+with center:
+    st.page_link(
+        "page0.py",
+        label="🏠 Accueil",
+        use_container_width=True
+    )
