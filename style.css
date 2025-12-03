@@ -1,0 +1,14 @@
+/* Réduction de l’espace */
+section.main > div {
+    padding-top: 0rem;
+}
+
+/* Titres plus élégants */
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+/* Photo arrondie */
+img {
+    border-radius: 12px;
+}
