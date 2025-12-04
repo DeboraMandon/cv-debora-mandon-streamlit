@@ -98,8 +98,19 @@ a[data-testid="stPageLink"] {
 </style>
 """, unsafe_allow_html=True)
 
-def save_message(name, email, message):
-    conn = sqlite3.connect("contact.db")
+import streamlit as st
+import sqlite3
+from datetime import datetime
+import pandas as pd
+
+st.set_page_config(layout="wide")
+
+# -----------------------------------
+# INITIALISATION DB (CRUCIAL)
+# -----------------------------------
+def init_contact_db():
+    """Crée la table messages si elle n'existe pas"""
+    conn = sqlite3.connect("contact.db", check_same_thread=False)
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS messages (
@@ -110,11 +121,20 @@ def save_message(name, email, message):
             message TEXT
         )
     """)
+    conn.commit()
+    conn.close()
+
+def save_message(name, email, message):
+    conn = sqlite3.connect("contact.db", check_same_thread=False)
+    c = conn.cursor()
     c.execute("INSERT INTO messages (date, name, email, message) VALUES (?, ?, ?, ?)",
               (datetime.now().isoformat(), name, email, message))
     conn.commit()
     conn.close()
-    
+ 
+ # LANCE L'INIT AU DÉBUT
+init_contact_db()   
+
 # -----------------------------------
 # HEADER
 # -----------------------------------
