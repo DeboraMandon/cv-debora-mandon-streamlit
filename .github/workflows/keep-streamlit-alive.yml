@@ -1,0 +1,13 @@
+name: Keep Streamlit App Awake
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"   # toutes les 4 heures
+  workflow_dispatch:        # optionnel: déclenchement manuel
+
+jobs:
+  ping-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake up Streamlit app
+        run: curl -s -o /dev/null -w "%{http_code}\n" https://cv-debora-mandon-app.streamlit.app/
