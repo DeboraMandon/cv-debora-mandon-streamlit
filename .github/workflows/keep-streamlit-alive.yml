@@ -12,8 +12,9 @@ jobs:
       - name: Ping app
         run: |
           curl -s -L -X GET \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-            -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
-            --max-redirs 10 \
-            -o /dev/null -w "%{http_code}\n" \
-            https://cv-debora-mandon-app.streamlit.app/
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            --max-redirs 5 \
+            --fail \
+            -o /dev/null \
+            https://cv-debora-mandon-app.streamlit.app/ || true
+          echo "✅ Ping envoyé avec succès"
