@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 from datetime import datetime
+import pandas as pd
 
 st.set_page_config(layout="wide")
 
@@ -97,8 +98,19 @@ a[data-testid="stPageLink"] {
 </style>
 """, unsafe_allow_html=True)
 
-def save_message(name, email, message):
-    conn = sqlite3.connect("contact.db")
+import streamlit as st
+import sqlite3
+from datetime import datetime
+import pandas as pd
+
+st.set_page_config(layout="wide")
+
+# -----------------------------------
+# INITIALISATION DB (CRUCIAL)
+# -----------------------------------
+def init_contact_db():
+    """Crée la table messages si elle n'existe pas"""
+    conn = sqlite3.connect("contact.db", check_same_thread=False)
     c = conn.cursor()
     c.execute("""
         CREATE TABLE IF NOT EXISTS messages (
@@ -109,11 +121,20 @@ def save_message(name, email, message):
             message TEXT
         )
     """)
+    conn.commit()
+    conn.close()
+
+def save_message(name, email, message):
+    conn = sqlite3.connect("contact.db", check_same_thread=False)
+    c = conn.cursor()
     c.execute("INSERT INTO messages (date, name, email, message) VALUES (?, ?, ?, ?)",
               (datetime.now().isoformat(), name, email, message))
     conn.commit()
     conn.close()
-    
+ 
+ # LANCE L'INIT AU DÉBUT
+init_contact_db()   
+
 # -----------------------------------
 # HEADER
 # -----------------------------------
@@ -212,3 +233,73 @@ with center:
         label="🏠 Accueil",
         use_container_width=True
     )
+
+# -----------------------------------
+# ADMIN - MESSAGES RÉCUS (PROTÉGÉ)
+# -----------------------------------
+st.markdown("---")
+
+# Système de mot de passe
+if "admin_authenticated" not in st.session_state:
+    st.session_state.admin_authenticated = False
+
+if not st.session_state.admin_authenticated:
+    # Formulaire mot de passe
+    admin_password = st.text_input("🔐 Mot de passe admin", type="password")
+    
+    if st.button("👁️ Voir les messages", type="secondary"):
+        if admin_password == "helloworld_2025":  # CHANGE CE MOT DE PASSE !
+            st.session_state.admin_authenticated = True
+            st.success("✅ Accès admin autorisé !")
+            st.rerun()
+        else:
+            st.error("❌ Mot de passe incorrect")
+else:
+    # Page admin affichée
+    st.success("🔓 Mode admin activé")
+    
+    if st.button("🔒 Fermer session admin", type="secondary"):
+        st.session_state.admin_authenticated = False
+        st.rerun()
+    
+    st.markdown("---")
+    st.subheader("📬 Messages reçus")
+    
+    try:
+        with sqlite3.connect("contact.db") as conn:
+            df = pd.read_sql("""
+                SELECT 
+                    date, 
+                    name, 
+                    email, 
+                    length(message) as nb_car,
+                    SUBSTR(message, 1, 100) as preview
+                FROM messages 
+                ORDER BY date DESC 
+                LIMIT 50
+            """, conn)
+        
+        if df.empty:
+            st.info("✨ Aucun message pour le moment.")
+        else:
+            # Tableau des messages
+            st.dataframe(df, use_container_width=True, hide_index=True)
+            
+            # Statistiques rapides
+            col1, col2, col3 = st.columns(3)
+            with col1: st.metric("Messages totaux", len(df))
+            with col2: st.metric("Ce mois", len(df[df.date.str.startswith('2025-12')]))
+            with col3: st.metric("Non lus", "0")  # À implémenter si besoin
+            
+            # Bouton pour télécharger tous les messages
+            csv = df.to_csv(index=False, encoding='utf-8')
+            st.download_button(
+                "💾 Exporter CSV",
+                csv,
+                "messages_contact.csv",
+                "text/csv"
+            )
+            
+    except Exception as e:
+        st.error(f"❌ Erreur lecture DB : {e}")
+
