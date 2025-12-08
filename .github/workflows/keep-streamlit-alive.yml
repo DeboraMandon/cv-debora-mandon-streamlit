@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Wake up Streamlit app
-        run: curl -s -o /dev/null -w "%{http_code}\n" https://cv-debora-mandon-app.streamlit.app/
+        run: curl -s -L -o /dev/null -w "%{http_code}\n" https://cv-debora-mandon-app.streamlit.app/
