@@ -3,18 +3,69 @@ name: Keep Streamlit App Awake
 on:
   schedule:
     - cron: "0 */4 * * *"   # toutes les 4 heures
-  workflow_dispatch:        # optionnel: déclenchement manuel
+  workflow_dispatch:
 
 jobs:
-  ping-app:
+  keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping app
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install playwright
         run: |
-          curl -s -L -X GET \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            --max-redirs 5 \
-            --fail \
-            -o /dev/null \
-            https://cv-debora-mandon-app.streamlit.app/ || true
-          echo "✅ Ping envoyé avec succès"
+          python -m pip install --upgrade pip
+          pip install playwright==1.40.0  # pin une version stable
+          playwright install chromium
+
+      - name: Create keepalive script
+        run: |
+          cat > keepalive.py <<'PY'
+          import time
+          from playwright.sync_api import sync_playwright
+          URL = "https://cv-debora-mandon-app.streamlit.app/"
+
+          def try_wake(page):
+              # si Streamlit affiche un écran "sleep", il y a souvent un bouton pour réveiller.
+              # On tente deux sélecteurs communs : bouton texte anglais et français.
+              possible_texts = [
+                  "Yes, get this app back up!", 
+                  "Get this app back up", 
+                  "Réveiller l’application", 
+                  "Réactiver l'application"
+              ]
+              for txt in possible_texts:
+                  try:
+                      locator = page.locator(f"text={txt}")
+                      if locator.count() > 0:
+                          locator.first.click()
+                          return True
+                  except Exception:
+                      pass
+              return False
+
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True)
+              page = browser.new_page()
+              # Ajoute un user-agent réaliste
+              page.set_extra_http_headers({"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"})
+              try:
+                  page.goto(URL, timeout=60000)
+                  time.sleep(2)
+                  # tenter de réveiller si bouton présent
+                  woke = try_wake(page)
+                  # attendre un peu pour que l'app se réchauffe
+                  time.sleep(10 if woke else 4)
+              except Exception as e:
+                  print("Erreur lors de la visite :", e)
+              finally:
+                  browser.close()
+          PY
+
+      - name: Run keepalive
+        run: python keepalive.py
