@@ -153,7 +153,7 @@ st.markdown(
     """
     <div class='contact-line contact-link'>
         <span class='contact-icon'>📧</span>
-        <a href="mailto:debora.mandon@biiir.com">debora.mandon@biiir.com</a>
+        <a href="mailto:debora.mandon@biir.fr">debora.mandon@biir.fr</a>
     </div>
 
     <div class='contact-line contact-link'>
@@ -302,4 +302,5 @@ else:
             
     except Exception as e:
         st.error(f"❌ Erreur lecture DB : {e}")
+
 
