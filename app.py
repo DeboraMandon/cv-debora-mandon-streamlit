@@ -35,7 +35,7 @@ with st.sidebar:
     st.markdown("[💻 GitHub](https://github.com/DeboraMandon)")
     st.markdown("---")
     st.subheader("📄 Télécharger mon CV")
-    with open("assets/CV_Debora_Mandon_DE.pdf", "rb") as pdf:
+    with open("assets/CV_DMA_DE.pdf", "rb") as pdf:
         st.download_button(
             "Télécharger le CV PDF",
             data=pdf,
