@@ -1,1 +1,30 @@
+# Bases de données SQLite (éphémères sur Streamlit Cloud)
 *.db
+*.sqlite
+*.sqlite3
+
+# Secrets Streamlit (NE JAMAIS commiter)
+.streamlit/secrets.toml
+
+# Environnements Python
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
