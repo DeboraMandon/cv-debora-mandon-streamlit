@@ -238,5 +238,3 @@ st.dataframe(df_display, use_container_width=True, hide_index=True)
 
 st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 st.markdown("---")
-
-st.markdown("<div style="height:30px;"></div>", unsafe_allow_html=True)
