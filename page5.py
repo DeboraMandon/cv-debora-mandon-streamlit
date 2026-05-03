@@ -68,7 +68,7 @@ df_funnel = pd.DataFrame(FUNNEL_RAW, columns=["status", "count"])
 # ---------------------------------------------------------------
 
 st.markdown(
-    "<h1 style='text-align:center;'>📦 Pipeline Monitoring — Olist E-Commerce</h1>",
+    "<h1 style='text-align:center;'>Pipeline Monitoring — Olist E-Commerce</h1>",
     unsafe_allow_html=True
 )
 st.markdown(
@@ -109,7 +109,7 @@ st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("📈 Volume de commandes livrées / mois")
+    st.subheader("Volume de commandes livrées / mois")
     fig_vol = px.bar(
         df_latency, x="month", y="orders_count",
         color_discrete_sequence=["#403EBB"],
@@ -119,7 +119,7 @@ with col1:
     st.plotly_chart(fig_vol, use_container_width=True)
 
 with col2:
-    st.subheader("✅ Taux de livraison à temps")
+    st.subheader("Taux de livraison à temps")
     fig_ot = px.line(
         df_latency, x="month_dt", y="on_time_rate",
         markers=True,
@@ -144,7 +144,7 @@ st.markdown("---")
 # LATENCES PIPELINE — 3 ÉTAPES
 # ---------------------------------------------------------------
 
-st.subheader("⏱️ Latences médianes par étape du pipeline (heures)")
+st.subheader("Latences médianes par étape du pipeline (heures)")
 
 st.caption(
     "**Achat → Approbation** : validation de paiement  |  "
@@ -194,7 +194,7 @@ st.markdown("---")
 col3, col4 = st.columns([1, 1])
 
 with col3:
-    st.subheader("🔽 Funnel des statuts de commande")
+    st.subheader("Funnel des statuts de commande")
     fig_funnel = go.Figure(go.Funnel(
         y=df_funnel["status"],
         x=df_funnel["count"],
@@ -208,7 +208,7 @@ with col3:
     st.plotly_chart(fig_funnel, use_container_width=True)
 
 with col4:
-    st.subheader("📊 Répartition des statuts")
+    st.subheader("Répartition des statuts")
     fig_pie = px.pie(
         df_funnel[df_funnel["count"] > 10],
         names="status", values="count",
@@ -225,7 +225,7 @@ st.markdown("---")
 # TABLEAU RÉCAPITULATIF
 # ---------------------------------------------------------------
 
-st.subheader("📋 Données mensuelles détaillées")
+st.subheader("Données mensuelles détaillées")
 
 df_display = df_latency[["month","orders_count","approval_h","carrier_h","last_mile_h","on_time_rate"]].copy()
 df_display.columns = ["Mois","Commandes","Approbation (h)","Expédition (h)","Last mile (h)","Taux à temps"]
@@ -239,13 +239,4 @@ st.dataframe(df_display, use_container_width=True, hide_index=True)
 st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 st.markdown("---")
 
-# ---------------------------------------------------------------
-# NAVIGATION
-# ---------------------------------------------------------------
-
-if st.button("⬅️ Revenir au Contact 📲"):
-    st.switch_page("page4.py")
-
-left, center, right = st.columns([7, 2, 7])
-with center:
-    st.page_link("page0.py", label="🏠 Accueil", use_container_width=True)
+st.markdown("<div style="height:30px;"></div>", unsafe_allow_html=True)
