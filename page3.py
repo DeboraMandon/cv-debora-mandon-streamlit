@@ -46,12 +46,20 @@ st.markdown("""
     background: #e8f5e9;
     color: #1b5e20;
 }
+.section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin: 0 0 16px 0;
+}
 @media (prefers-color-scheme: dark) {
-    .project-card  { background: #1e1e1e !important; border-color: #333 !important; }
-    .project-desc  { color: #ccc !important; }
-    .project-sub   { color: #666 !important; }
-    .tag           { background: #1a2a4a !important; color: #a0b4ff !important; }
-    .tag-green     { background: #1a2a1a !important; color: #80c080 !important; }
+    .project-card { background: #1e1e1e !important; border-color: #333 !important; }
+    .project-desc { color: #ccc !important; }
+    .project-sub  { color: #666 !important; }
+    .tag          { background: #1a2a4a !important; color: #a0b4ff !important; }
+    .tag-green    { background: #1a2a1a !important; color: #80c080 !important; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -60,12 +68,15 @@ st.markdown("<h1 style='text-align:center;'>Projets</h1>", unsafe_allow_html=Tru
 st.markdown("<div style='height:24px;'></div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------
-# helper : rendu d'une card projet
+# helper
 # ---------------------------------------------------------------
 
 def project_card(title, sub, desc, tags, link=None, tag_class="tag"):
     tags_html = "".join(f"<span class='{tag_class}'>{t}</span>" for t in tags)
-    link_html = f"<a href='{link}' target='_blank' style='font-size:0.8rem; float:right;'>💻 Voir le repo</a>" if link else ""
+    link_html = (
+        f"<a href='{link}' target='_blank' style='font-size:0.8rem; float:right;'>💻 Repo</a>"
+        if link else ""
+    )
     st.markdown(f"""
 <div class='project-card'>
     <p class='project-title'>{title} {link_html}</p>
@@ -76,15 +87,17 @@ def project_card(title, sub, desc, tags, link=None, tag_class="tag"):
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------
-# PROJETS
+# PROJETS CLIENTS
 # ---------------------------------------------------------------
+
+st.markdown("<p class='section-label'>Projets clients — missions BIIR</p>", unsafe_allow_html=True)
 
 project_card(
     title="Pipeline de collecte et traitement temps réel",
     sub="Azure Stream Analytics · Logic Apps · PostgreSQL · JSON Events",
     desc=(
         "Mise en place d'une chaîne Cloud complète permettant la collecte, le traitement "
-        "et l'ingestion d'événements en temps réel dans PostgreSQL.<br>"
+        "et l'ingestion d'événements en temps réel dans PostgreSQL. "
         "Ingestion via Logic Apps · Transformation dans Stream Analytics · "
         "Routage dynamique vers APIs · Monitoring et alertes automatisées."
     ),
@@ -113,6 +126,16 @@ project_card(
     tags=["Power BI", "Qlik", "DAX", "Modélisation", "KPI", "Dataviz"],
 )
 
+st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+st.markdown("---")
+st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+
+# ---------------------------------------------------------------
+# PROJETS PERSO / PORTFOLIO
+# ---------------------------------------------------------------
+
+st.markdown("<p class='section-label'>Projets personnels — portfolio</p>", unsafe_allow_html=True)
+
 project_card(
     title="Retail Pipeline ELT — Olist Brazil E-Commerce",
     sub="Projet portfolio · Python · PostgreSQL · dbt · Airflow · scikit-learn · Prophet",
@@ -120,11 +143,11 @@ project_card(
         "Pipeline ELT end-to-end sur le dataset Olist Brazil (99 441 commandes, Kaggle). "
         "Architecture Medallion : ingestion Python → PostgreSQL (raw) · dbt (staging → marts) · "
         "Airflow 2.9 · Prophet (prévisions revenue) · scikit-learn (scoring satisfaction) · Metabase.<br>"
-        "La page <em>Démo monitoring</em> présente les résultats d'analyse issus de ce dataset."
+        "La page <em>Démo monitoring</em> présente les analyses issues de ce dataset."
     ),
     tags=["Python", "PostgreSQL", "dbt", "Airflow", "scikit-learn", "Prophet", "Metabase", "ELT"],
-    tag_class="tag tag-green",
     link="https://github.com/DeboraMandon/retail-pipeline-elt",
+    tag_class="tag tag-green",
 )
 
 project_card(
@@ -138,6 +161,7 @@ project_card(
     ),
     tags=["Streamlit", "Python", "SQLite", "GitHub Actions", "CI/CD"],
     link="https://github.com/DeboraMandon/cv-debora-mandon-streamlit",
+    tag_class="tag tag-green",
 )
 
 st.markdown("<div style='height:30px;'></div>", unsafe_allow_html=True)
