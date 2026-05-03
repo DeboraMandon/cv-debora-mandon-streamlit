@@ -124,6 +124,7 @@ project_card(
     ),
     tags=["Python", "PostgreSQL", "dbt", "Airflow", "scikit-learn", "Prophet", "Metabase", "ELT"],
     tag_class="tag tag-green",
+    link="https://github.com/DeboraMandon/retail-pipeline-elt",
 )
 
 project_card(
